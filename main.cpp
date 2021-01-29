@@ -259,6 +259,9 @@ int main(int argc, char *argv[]) {
   lightPos[1] = 100.0;
   lightPos[2] = textureHeight/2.0;
 
+    glEnable(GL_SMOOTH);
+    glEnable(GL_DEPTH_TEST);  
+    
   setVBOs();
   initialSetup();
   glClearColor(0,0,0,1);
