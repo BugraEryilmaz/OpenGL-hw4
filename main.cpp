@@ -101,11 +101,15 @@ static void keyCallback(GLFWwindow* window, int key, int scancode, int action, i
       lightPos[0] -= 5;
     }
     if (key == GLFW_KEY_P && (action == GLFW_PRESS)) {
-      glfwDestroyWindow(win);
-      if (!isFullScreen)
-        win = glfwCreateWindow(widthWindow, heightWindow, "CENG477 - HW4", glfwGetPrimaryMonitor(), nullptr);
-      else
-        win = glfwCreateWindow(widthWindow, heightWindow, "CENG477 - HW4", nullptr, nullptr);
+      if (isFullScreen)
+        glfwSetWindowMonitor(window, nullptr, 0, 0, widthWindow, heightWindow, 0);
+      else{
+        const GLFWmonitor *monitor = glfwGetPrimaryMonitor();
+        GLFWvidmode *mode = const_cast<GLFWvidmode *>(glfwGetVideoMode(const_cast<GLFWmonitor *>(monitor)));
+        glfwSetWindowMonitor(window, const_cast<GLFWmonitor*>(monitor),0,0,mode->width, mode->height,mode->refreshRate);
+        widthWindow = mode->width;
+        heightWindow = mode->height;
+      }
       glfwMakeContextCurrent(win);
       glfwSetKeyCallback(win, keyCallback);
       isFullScreen = !isFullScreen;

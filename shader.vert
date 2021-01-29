@@ -25,7 +25,7 @@ float getHeight(vec2 xz) {
     vec2 normalizedXZ;
     normalizedXZ.x = 1-xz.x/widthTexture;
     normalizedXZ.y = 1-xz.y/heightTexture;
-    return texture2D(hTexture, normalizedXZ).r*20;
+    return texture2D(hTexture, normalizedXZ).r*heightFactor;
 }
 
 float calcHeight(vec2 xz) {
