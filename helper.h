@@ -1,6 +1,10 @@
 #ifndef __HELPER__H__
 #define __HELPER__H__
 
+#define GLEW_STATIC 
+
+#include <cassert>
+#include <vector>
 #include <iostream>
 #include <string>
 #include <fstream>

@@ -1,16 +1,16 @@
 ## TO-DO List
 
-- [ ]  Vertex Shader
-    - [ ]  Calculate textureCoordinate
-    - [ ]  Calculate vertexNormal
-    - [ ]  Calculate ToLightVector
-    - [ ]  Calculate ToCameraVector
-- [ ]  Fragment Shader
-    - [ ]  Calculate ambient
-    - [ ]  Calculate specular
-    - [ ]  Calculate diffuse
-    - [ ]  Calculate texture color
+- [x]  Vertex Shader
+    - [x]  Calculate textureCoordinate
+    - [x]  Calculate vertexNormal
+    - [x]  Calculate ToLightVector
+    - [x]  Calculate ToCameraVector
+- [x]  Fragment Shader
+    - [x]  Calculate ambient
+    - [x]  Calculate specular
+    - [x]  Calculate diffuse
+    - [x]  Calculate texture color
 - [ ]  Key Presses
     - [ ]  W, A, S, D, R, F, Q, E, T, G
-    - [ ]  X, Y, H, I, yukarı, aşağı, sağ, sol, P
-- [ ]  Calculate MV & MVP
+    - [x]  X, Y, H, I, yukarı, aşağı, sağ, sol, P
+- [x]  Calculate MV & MVP
