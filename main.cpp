@@ -26,9 +26,13 @@ GLuint idIndexBuffer;
 int textureWidth, textureHeight;
 float heightFactor = 10;
 
-vec3 cameraPos = {textureWidth/2.f, textureWidth/10.f, -textureWidth/4.f};
-vec3 cameraUp = {0, 1, 0};
-vec3 cameraGaze = {0, 0, 1};
+//vec3 cameraPos = {textureWidth/2.f, textureWidth/10.f, -textureWidth/4.f};
+//vec3 cameraUp = {0, 1, 0};
+//vec3 cameraGaze = {0, 0, 1};
+glm::vec3 cameraPos=(textureWidth/2.f, textureWidth/10.f, -textureWidth/4.f);
+glm::vec3 cameraUP = glm::vec3(0.0, 1.0, 0.0);
+glm::vec3 cameraGaze = glm::vec3(0.0, 0.0, 1.0);
+glm::vec3 camerCross = cross(cameraUP, cameraGaze);
 float cameraSpeed = 0;
 
 mat4x4 Model;
@@ -114,6 +118,52 @@ static void keyCallback(GLFWwindow* window, int key, int scancode, int action, i
       glfwSetKeyCallback(win, keyCallback);
       isFullScreen = !isFullScreen;
     }
+   if (key == GLFW_KEY_W && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+      //mat4x4_rotate(cameraGaze, camertGaze, cameraUp[0], cameraUp[1], cameraUp[2], -0.05f);
+     
+    cameraUP = glm::rotate(camera_up, -0.05f, cameraCross);
+    cameraGaze = glm::rotate(camera_gaze, -0.05f, cameraCross);
+    }
+    if (key == GLFW_KEY_S && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+    //mat4x4_rotate(cameraGaze, camertGaze, cameraUp[0], cameraUp[1], cameraUp[2], 0.05f);
+      cameraUP = glm::rotate(cameraUp, 0.05f, cameraCross);
+      cameraGaze = glm::rotate(cameraGaze, 0.05f, cameraCross);
+    }
+    if (key == GLFW_KEY_A && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+    //mat4x4_rotate(cameraGaze, camertGaze, cameraUp[0], cameraUp[1], cameraUp[2], 0.05f);
+      cameraCross = glm::rotate(cameraCross, 0.05f, cameraUp);
+      cameraGaze = glm::rotate(cameraGaze, 0.05f, cameraUp);
+    }
+    if (key == GLFW_KEY_D && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+      //mat4x4_rotate(cameraGaze, camertGaze, cameraUp[0], cameraUp[1], cameraUp[2], -0.05f);
+       cameraCross = glm::rotate(cameraCross, -0.05f, cameraUp);
+       cameraGaze = glm::rotate(cameraGaze, -0.05f, cameraUp);
+    }
+     if (key == GLFW_KEY_R && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+      heightFactor += 0.5; //OK
+      GLint heightFactorLoc = glGetUniformLocation(idProgramShader, "heightFactor");
+     glUniform1f(heightFactorLoc, heightFactor);
+    }
+     if (key == GLFW_KEY_F && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+      heightFactor -= 0.5; //OK
+      GLint heightFactorLoc = glGetUniformLocation(idProgramShader, "heightFactor");
+      glUniform1f(heightFactorLoc, heightFactor);          
+    }
+     if (key == GLFW_KEY_Q && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+      //textureCoordinate-=1;
+      cameraGaze = glm::translate(cameraGaze, -0.05f, cameraUp);
+    }
+      if (key == GLFW_KEY_E && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+      //textureCoordinate+=1;
+      Model = glm::translate(Model, -0.05f, cameraUp);
+    }
+     if (key == GLFW_KEY_T && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+      lightPos[1] += 5;   //OK
+    }
+     if (key == GLFW_KEY_G && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+      lightPos[1] -= 5; //OK
+    }
+
 }
 
 
