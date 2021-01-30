@@ -33,7 +33,10 @@ glm::vec3 cameraPos=(textureWidth/2.f, textureWidth/10.f, -textureWidth/4.f);
 glm::vec3 cameraUP = glm::vec3(0.0, 1.0, 0.0);
 glm::vec3 cameraGaze = glm::vec3(0.0, 0.0, 1.0);
 glm::vec3 camerCross = cross(cameraUP, cameraGaze);
+glm::vec3 Tleft = glm::vec3(-1.0, 0.0, 0.0);
+glm:: vec3 Tright = glm::vec3(1.0, 0.0, 0.0);
 float cameraSpeed = 0;
+
 
 mat4x4 Model;
 mat4x4 View;
@@ -150,12 +153,10 @@ static void keyCallback(GLFWwindow* window, int key, int scancode, int action, i
       glUniform1f(heightFactorLoc, heightFactor);          
     }
      if (key == GLFW_KEY_Q && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-      //textureCoordinate-=1;
-      cameraGaze = glm::translate(cameraGaze, -0.05f, cameraUp);
+      Model = glm::translate(Model, Tleft);
     }
       if (key == GLFW_KEY_E && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-      //textureCoordinate+=1;
-      Model = glm::translate(Model, -0.05f, cameraUp);
+      Model = glm::translate(Model, Tright);
     }
      if (key == GLFW_KEY_T && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
       lightPos[1] += 5;   //OK
