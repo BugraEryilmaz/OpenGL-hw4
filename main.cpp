@@ -1,6 +1,8 @@
 #include "helper.h"
 #define _USE_MATH_DEFINES
-#include "linmath.h"
+#include <glm/glm.hpp>
+#include <glm/ext.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 
 static GLFWwindow* win = NULL;
 int widthWindow = 1000, heightWindow = 1000;
@@ -29,22 +31,22 @@ float heightFactor = 10;
 //vec3 cameraPos = {textureWidth/2.f, textureWidth/10.f, -textureWidth/4.f};
 //vec3 cameraUp = {0, 1, 0};
 //vec3 cameraGaze = {0, 0, 1};
-glm::vec3 cameraPos=(textureWidth/2.f, textureWidth/10.f, -textureWidth/4.f);
+glm::vec3 cameraPos = glm::vec3(textureWidth/2.f, textureWidth/10.f, -textureWidth/4.f);
 glm::vec3 cameraUP = glm::vec3(0.0, 1.0, 0.0);
 glm::vec3 cameraGaze = glm::vec3(0.0, 0.0, 1.0);
-glm::vec3 camerCross = cross(cameraUP, cameraGaze);
+glm::vec3 cameraCross = cross(cameraUP, cameraGaze);
 glm::vec3 Tleft = glm::vec3(-1.0, 0.0, 0.0);
-glm:: vec3 Tright = glm::vec3(1.0, 0.0, 0.0);
+glm::vec3 Tright = glm::vec3(1.0, 0.0, 0.0);
 float cameraSpeed = 0;
 
 
-mat4x4 Model;
-mat4x4 View;
-mat4x4 Projection;
-mat4x4 MV;
-mat4x4 MVP;
+glm::mat4x4 Model;
+glm::mat4x4 View;
+glm::mat4x4 Projection;
+glm::mat4x4 MV;
+glm::mat4x4 MVP;
 
-vec3 lightPos;
+glm::vec3 lightPos;
 GLuint depthMapFBO;
 GLuint depthCubemap;
 bool lightPosFlag = false;
@@ -59,17 +61,17 @@ void initialSetup() {
   cameraPos[0] = textureWidth/2.f;
   cameraPos[1] = textureWidth/10.f;
   cameraPos[2] = -textureWidth/4.f;
-  cameraUp[0] = 0;
-  cameraUp[1] = 1;
-  cameraUp[2] = 0;
+  cameraUP[0] = 0;
+  cameraUP[1] = 1;
+  cameraUP[2] = 0;
   cameraGaze[0] = 0;
   cameraGaze[1] = 0;
   cameraGaze[2] = 1;
   cameraSpeed = 0;
 
-  mat4x4_identity(Model);
-  mat4x4_identity(View);
-  mat4x4_identity(Projection);
+  Model = glm::mat4x4(1);
+  View = glm::mat4x4(1);
+  Projection = glm::mat4x4(1);
 
 }
 
@@ -123,24 +125,24 @@ static void keyCallback(GLFWwindow* window, int key, int scancode, int action, i
     }
    if (key == GLFW_KEY_W && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
       //mat4x4_rotate(cameraGaze, camertGaze, cameraUp[0], cameraUp[1], cameraUp[2], -0.05f);
-     
-    cameraUP = glm::rotate(camera_up, -0.05f, cameraCross);
-    cameraGaze = glm::rotate(camera_gaze, -0.05f, cameraCross);
+    
+    cameraUP = glm::rotate(cameraUP, -0.05f, cameraCross);
+    cameraGaze = glm::rotate(cameraGaze, -0.05f, cameraCross);
     }
     if (key == GLFW_KEY_S && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
     //mat4x4_rotate(cameraGaze, camertGaze, cameraUp[0], cameraUp[1], cameraUp[2], 0.05f);
-      cameraUP = glm::rotate(cameraUp, 0.05f, cameraCross);
+      cameraUP = glm::rotate(cameraUP, 0.05f, cameraCross);
       cameraGaze = glm::rotate(cameraGaze, 0.05f, cameraCross);
     }
     if (key == GLFW_KEY_A && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
     //mat4x4_rotate(cameraGaze, camertGaze, cameraUp[0], cameraUp[1], cameraUp[2], 0.05f);
-      cameraCross = glm::rotate(cameraCross, 0.05f, cameraUp);
-      cameraGaze = glm::rotate(cameraGaze, 0.05f, cameraUp);
+      cameraCross = glm::rotate(cameraCross, 0.05f, cameraUP);
+      cameraGaze = glm::rotate(cameraGaze, 0.05f, cameraUP);
     }
     if (key == GLFW_KEY_D && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
       //mat4x4_rotate(cameraGaze, camertGaze, cameraUp[0], cameraUp[1], cameraUp[2], -0.05f);
-       cameraCross = glm::rotate(cameraCross, -0.05f, cameraUp);
-       cameraGaze = glm::rotate(cameraGaze, -0.05f, cameraUp);
+       cameraCross = glm::rotate(cameraCross, -0.05f, cameraUP);
+       cameraGaze = glm::rotate(cameraGaze, -0.05f, cameraUP);
     }
      if (key == GLFW_KEY_R && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
       heightFactor += 0.5; //OK
@@ -153,7 +155,9 @@ static void keyCallback(GLFWwindow* window, int key, int scancode, int action, i
       glUniform1f(heightFactorLoc, heightFactor);          
     }
      if (key == GLFW_KEY_Q && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-      Model = glm::translate(Model, Tleft);
+      glm::mat4x4 temp = glm::translate(Tleft);
+      Model = temp * Model;
+      //Model = glm::translate(Model, Tleft);
     }
       if (key == GLFW_KEY_E && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
       Model = glm::translate(Model, Tright);
@@ -231,22 +235,20 @@ void drawMesh() {
 }
 
 void setMVP() {
-  mat4x4_perspective(Projection, fov, aspectRatio, nearDistance, farDistance);
-  vec3 lookat;
-  vec3_add(lookat, cameraGaze, cameraPos);
-  mat4x4_look_at(View, cameraPos, lookat, cameraUp);
-  mat4x4_mul(MV, View, Model);
-  mat4x4_mul(MVP, Projection, MV);
+  Projection = glm::perspective(fov, aspectRatio, nearDistance, farDistance);
+  View = glm::lookAt(cameraPos, glm::vec3(cameraPos + cameraGaze), cameraUP);
+  MV = View * Model;
+  MVP = Projection * MV;
 
   GLint MVPLoc = glGetUniformLocation(idProgramShader, "MVP");
-  glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, (const GLfloat*) MVP);
+  glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, &MVP[0][0]);
   GLint MVLoc = glGetUniformLocation(idProgramShader, "MV");
-  glUniformMatrix4fv(MVLoc, 1, GL_FALSE, (const GLfloat*) MV);
+  glUniformMatrix4fv(MVLoc, 1, GL_FALSE, (const GLfloat*) &MV[0][0]);
 
   GLint cameraPosLoc = glGetUniformLocation(idProgramShader, "cameraPosition");
-  glUniform3fv(cameraPosLoc, 1, (const GLfloat*) cameraPos);
+  glUniform3fv(cameraPosLoc, 1, (const GLfloat*) &cameraPos[0]);
   GLint lightPosLoc = glGetUniformLocation(idProgramShader, "lightPosition");
-  glUniform3fv(lightPosLoc, 1, (const GLfloat*) lightPos);
+  glUniform3fv(lightPosLoc, 1, (const GLfloat*) &lightPos[0]);
   GLint heightFactorLoc = glGetUniformLocation(idProgramShader, "heightFactor");
   glUniform1f(heightFactorLoc, heightFactor);
 }
@@ -310,8 +312,8 @@ int main(int argc, char *argv[]) {
   lightPos[1] = 100.0;
   lightPos[2] = textureHeight/2.0;
 
-    glEnable(GL_SMOOTH);
-    glEnable(GL_DEPTH_TEST);  
+  glEnable(GL_SMOOTH);
+  glEnable(GL_DEPTH_TEST);  
     
   setVBOs();
   initialSetup();
@@ -325,9 +327,7 @@ int main(int argc, char *argv[]) {
     glViewport(0, 0, widthWindow, heightWindow);
     setMVP();
     drawMesh();
-    vec3 deltaPos;
-    vec3_scale(deltaPos, cameraGaze, cameraSpeed);
-    vec3_add(cameraPos, cameraPos, deltaPos);
+    cameraPos = cameraPos + cameraGaze * cameraSpeed;
     glfwPollEvents();
   }
 

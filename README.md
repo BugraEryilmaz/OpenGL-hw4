@@ -10,7 +10,7 @@
     - [x]  Calculate specular
     - [x]  Calculate diffuse
     - [x]  Calculate texture color
-- [ ]  Key Presses
-    - [ ]  W, A, S, D, R, F, Q, E, T, G
+- [x]  Key Presses
+    - [x]  W, A, S, D, R, F, Q, E, T, G
     - [x]  X, Y, H, I, yukarı, aşağı, sağ, sol, P
 - [x]  Calculate MV & MVP
